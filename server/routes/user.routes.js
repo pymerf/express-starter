@@ -1,6 +1,10 @@
 import { Router } from "express";
 import { extend } from "lodash";
 import User from "../models/user.model";
+import {
+  hasAuthorization,
+  requireSignin,
+} from "../middlewares/auth.middleware";
 
 const router = Router();
 
@@ -39,12 +43,12 @@ router.param("userId", async (req, res, next, id) => {
 
 router
   .route("/:userId")
-  .get(async (req, res) => {
+  .get(requireSignin, async (req, res) => {
     req.profile.hashedPassword = undefined;
     req.profile.salt = undefined;
     return res.json(req.profile);
   })
-  .put(async (req, res) => {
+  .put(requireSignin, hasAuthorization, async (req, res) => {
     try {
       let user = req.profile;
       user = extend(user, req.body);
@@ -56,7 +60,7 @@ router
       return res.status(400).json({ error });
     }
   })
-  .delete(async (req, res) => {
+  .delete(requireSignin, hasAuthorization, async (req, res) => {
     try {
       let deletedUser = await User.findByIdAndDelete(req.profile._id).select(
         "-salt -hashedPassword"
