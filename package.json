@@ -1,7 +1,7 @@
 {
-  "name": "mern-skeleton",
+  "name": "express-starter",
   "version": "1.0.0",
-  "description": "",
+  "description": "A starter template for express.js backend API with mongoose ODM",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
